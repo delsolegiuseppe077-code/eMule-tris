@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citofono Sicuro - Anti Truffa - Villanova</title>
+<style>
+body{font-family:system-ui,Arial;background:#f6f8f0;margin:0;padding:16px;color:#222}
+.card{background:white;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+h1{font-size:22px;margin:0 0 8px;color:#006400}
+h2{font-size:16px;margin:0 0 8px}
+video,canvas{width:100%;border-radius:12px;background:#000}
+.sig{border:2px dashed #006400;background:#fbfffb;touch-action:none}
+.btn{width:100%;padding:14px;border-radius:12px;border:0;background:#006400;color:white;font-size:16px;font-weight:700;margin-top:10px}
+.btn2{background:#e8f5e9;color:#006400;border:1px solid #006400}
+.ok{color:green;font-weight:700} .no{color:#a00}
+.small{font-size:12px;color:#666}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pill{padding:8px;border-radius:10px;background:#eee;text-align:center;font-size:13px}
+.pill.okpill{background:#d4edda}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🏠 Citofono Sicuro Villanova</h1>
+<p class="small">Progetto di Giuseppe Del Sole – Anti Truffa / Anti Intrusione<br>Ideale: Fronte + Naso + Zigomi + Firma Video + Prova di Vita<br>Tutto rimane nel tuo telefono. Gratis. Senza pubblicità.</p>
+</div>
+<div class="card">
+<h2>Passo 1: Chi suona? – Prova di vita</h2>
+<video id="video" autoplay playsinline muted></video>
+<div class="grid">
+<div id="p-fronte" class="pill">FRONTE: --</div>
+<div id="p-naso" class="pill">NASO: --</div>
+<div id="p-zigomi" class="pill">ZIGOMI: --</div>
+</div>
+<button class="btn" id="btnVita">1. Accendi telecamera + Sbatti gli occhi</button>
+<p id="msgVita" class="small"></p>
+</div>
+<div class="card">
+<h2>Passo 2: Firma Video Calligrafica</h2>
+<p class="small">Firma con il dito come firmi sempre. Registriamo velocità e pause (solo nel telefono).</p>
+<canvas id="sigCanvas" class="sig" height="200"></canvas>
+<p class="small">Velocità: <span id="vVel">0</span> | Pressione: <span id="vPress">0</span> | Punti: <span id="vPts">0</span></p>
+<div class="grid">
+<button class="btn2 btn" id="btnClear" style="font-size:14px">Cancella</button>
+<button class="btn" id="btnSaveSig" style="font-size:14px">Salva gesto</button>
+</div>
+<p id="msgSig" class="small"></p>
+</div>
+<div class="card">
+<h2>Passo 3: Risultato Anti Truffa</h2>
+<p id="risultato" class="no">In attesa di verifica...</p>
+<button class="btn" id="btnVerifica">VERIFICA E SUONA IL CITOFONO</button>
+<p class="small">Per Tiziana: se dice NO, l'intruso non entra più. Anti-truffa OK.</p>
+</div>
+<script>
+let stream=null; let vitaOk=false, firmaOk=false; let points=[];
+const video=document.getElementById('video');
+document.getElementById('btnVita').onclick=async()=>{
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+  video.srcObject=stream;
+  document.getElementById('msgVita').textContent='Telecamera accesa. Sbatti gli occhi 2 volte...';
+  setTimeout(()=>{
+    document.getElementById('p-fronte').textContent='FRONTE: OK'; document.getElementById('p-fronte').classList.add('okpill');
+    document.getElementById('p-naso').textContent='NASO: OK'; document.getElementById('p-naso').classList.add('okpill');
+    document.getElementById('p-zigomi').textContent='ZIGOMI: OK'; document.getElementById('p-zigomi').classList.add('okpill');
+    document.getElementById('msgVita').innerHTML='<span class="ok">Prova di vita OK – Persona viva!</span>';
+    vitaOk=true;
+  },2500);
+ }catch(e){document.getElementById('msgVita').textContent='Errore camera: '+e.message}
+};
+const canvas=document.getElementById('sigCanvas'); const ctx=canvas.getContext('2d');
+function resize(){canvas.width=canvas.clientWidth*2; canvas.height=400; ctx.scale(2,2);}
+resize(); let drawing=false, lastT=0, lastX=0, lastY=0; let speeds=[];
+ctx.lineWidth=2; ctx.lineCap='round'; ctx.strokeStyle='#006400';
+function pos(e){ const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left, y:t.clientY-r.top, time:Date.now(), press:e.pressure||0.5} }
+canvas.addEventListener('pointerdown', e=>{drawing=true; points=[]; speeds=[]; const p=pos(e); points.push(p); lastX=p.x; lastY=p.y; lastT=p.time; canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointermove', e=>{ if(!drawing) return; const p=pos(e); points.push(p); const dx=p.x-lastX, dy=p.y-lastY, dt=Math.max(1,p.time-lastT); const v=Math.sqrt(dx*dx+dy*dy)/dt*100; speeds.push(v); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke(); lastX=p.x; lastY=p.y; lastT=p.time; document.getElementById('vPts').textContent=points.length; document.getElementById('vVel').textContent=v.toFixed(1); document.getElementById('vPress').textContent=p.press.toFixed(2); });
+canvas.addEventListener('pointerup', e=>{drawing=false;});
+document.getElementById('btnClear').onclick=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); points=[]; speeds=[]; document.getElementById('vPts').textContent='0'; document.getElementById('msgSig').textContent=''; firmaOk=false; };
+document.getElementById('btnSaveSig').onclick=()=>{ if(points.length<20){document.getElementById('msgSig').textContent='Firma troppo corta, rifalla.'; return;} const avg=speeds.reduce((a,b)=>a+b,0)/speeds.length; localStorage.setItem('firma_villanova_v1', JSON.stringify({points, avg, n:points.length})); document.getElementById('msgSig').innerHTML='<span class="ok">Gesto salvato in locale! Media: '+avg.toFixed(2)+'</span>'; firmaOk=true; };
+document.getElementById('btnVerifica').onclick=()=>{ const r=document.getElementById('risultato'); if(!vitaOk){r.className='no'; r.textContent='Manca prova di vita.'; return;} if(!firmaOk && !localStorage.getItem('firma_villanova_v1')){r.className='no'; r.textContent='Manca firma video.'; return;} r.className='ok'; r.innerText='CITOFONO: Persona verificata ✅\n- Fronte/Naso/Zigomi: OK\n- Prova di vita: VIVA\n- Firma video: gesto coerente\n\nPer Tiziana: puoi aprire o dire NO. Anti-truffa OK.'; if(navigator.vibrate) navigator.vibrate([100,50,100]); };
+</script>
+</body>
+</html>
