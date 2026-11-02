@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eMule TRISS - Adunanza Volante</title>
+<style>
+body{background:#0a0a23;color:#fff;font-family:Arial;text-align:center;padding:20px}
+h1{color:#ffcc00;margin:5px}
+.small{color:#aaa;font-size:12px}
+#board{display:grid;grid-template-columns:repeat(3,90px);gap:8px;justify-content:center;margin:20px auto}
+.cell{width:90px;height:90px;background:#1e1e4a;font-size:50px;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer}
+.cell:hover{background:#2e2e6a}
+#status{font-size:20px;margin:15px;color:#00ffcc}
+button{padding:10px 20px;border-radius:10px;border:none;background:#ffcc00;font-weight:bold;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>🐴 eMule TRISS 🚀</h1>
+<h2 style="margin:0;color:#00ffcc">Adunanza Volante</h2>
+<p class="small">Autore: Giuseppe Del Sole - Villanova Mondovì (CN)<br>Licenza GPL-3.0 - FREE FOREVER</p>
+<div id="status">Tocca a: 🐴 Mulo</div>
+<div id="board"></div>
+<button onclick="resetGame()">Nuova Partita - Pulito Come Nuovo</button>
+<p class="small" style="margin-top:20px">Evoluzione P2P - TRISS Cubitale - Condivisione Volante</p>
+<script>
+const boardEl=document.getElementById('board');
+const statusEl=document.getElementById('status');
+let board=["","","","","","","","",""];
+let current="🐴";
+let active=true;
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function draw(){
+ boardEl.innerHTML="";
+ board.forEach((c,i)=>{
+  const d=document.createElement('div');
+  d.className='cell';
+  d.textContent=c;
+  d.onclick=()=>move(i);
+  boardEl.appendChild(d);
+ });
+}
+function move(i){
+ if(board[i]!=""||!active) return;
+ board[i]=current;
+ check();
+ current=current=="🐴"?"🚀":"🐴";
+ if(active) statusEl.textContent="Tocca a: "+current+" "+(current=="🐴"?"Mulo":"Adunanza");
+ draw();
+}
+function check(){
+ for(let w of wins){
+  if(board[w[0]]&&board[w[0]]==board[w[1]]&&board[w[0]]==board[w[2]]){
+   statusEl.textContent="VINCE "+board[w[0]]+"! ADUNANZA VOLANTE!";
+   active=false; return;
+  }
+ }
+ if(!board.includes("")){statusEl.textContent="PAREGGIO - Condivisione Perfetta!";active=false;}
+}
+function resetGame(){
+ board=["","","","","","","","",""];current="🐴";active=true;statusEl.textContent="Tocca a: 🐴 Mulo";draw();
+}
+draw();
+</script>
+</body>
+</html>
