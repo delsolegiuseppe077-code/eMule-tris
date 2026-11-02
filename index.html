@@ -3,68 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CITOFONO SICURO - Salva Vita</title>
-<style>
-body{font-family:Arial;text-align:center;padding:10px;background:#fff5f5}
-h1{color:#d32f2f;font-size:24px}
-.card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 3px 8px rgba(0,0,0,.2);border:2px solid #eee}
-input,textarea{font-size:19px;padding:12px;width:90%;border-radius:12px;border:2px solid #d32f2f;margin:8px 0}
-button{font-size:20px;padding:16px;width:95%;margin:8px 0;border-radius:14px;border:none;font-weight:bold}
-.sos{background:#d32f2f;color:#fff;font-size:28px;padding:26px}
-.male{background:#ff6f00;color:#fff;font-size:24px;padding:22px}
-.salva{background:#2e7d32;color:#fff}
-.blu{background:#1976d2;color:#fff}
-.giallo{background:#ffeb3b;color:#000}
-.verde{background:#388e3c;color:#fff}
-</style>
+<title>CITOFONO SICURO</title>
+<style>body{font-family:Arial;text-align:center;padding:10px;background:#fff5f5}h1{color:#d32f2f} .card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 3px 8px rgba(0,0,0,.2)} input,textarea{font-size:19px;padding:12px;width:90%;border-radius:12px;border:2px solid #d32f2f;margin:8px 0} button{font-size:20px;padding:16px;width:95%;margin:8px 0;border-radius:14px;border:none;font-weight:bold} .sos{background:#d32f2f;color:#fff;font-size:28px;padding:26px} .male{background:#ff6f00;color:#fff;font-size:24px;padding:22px} .salva{background:#2e7d32;color:#fff} .blu{background:#1976d2;color:#fff} .giallo{background:#ffeb3b;color:#000} .verde{background:#388e3c;color:#fff}</style>
 </head>
 <body>
-<h1>🛡️ CITOFONO SICURO<br>di Tiziana e Giuseppe<br>🆘 SALVA VITA</h1>
-
-<div id="setup" class="card">
-<h2>📱 Configura - Prima volta</h2>
-Numero famiglia:<br>
-<input type="tel" id="numFam" placeholder="3331234567"><br>
-Indirizzo per ambulanza:<br>
-<textarea id="indirizzo" rows="2" placeholder="Villanova Mondovi, Via..."></textarea><br>
-<button class="salva" onclick="salva()">✅ SALVA E INIZIA</button>
-</div>
-
-<div id="main" style="display:none">
-<div class="card">
-<p>Famiglia: <b id="showNum"></b> - <a href="#" onclick="resetta()">cambia</a><br><span id="showInd"></span></p>
-<button class="sos" onclick="emergenza('famiglia')">🆘 AIUTO<br>CHIAMA FAMIGLIA</button>
-<button class="male" onclick="emergenza('118')">🚑 STO MALE<br>CHIAMA 118</button>
-</div>
-<div class="card">
-<h3>🚪 Citofono</h3>
-<button class="blu" onclick="parla('Chi è? Dica chi è!')">🔵 CHI È?</button>
-<button class="giallo" onclick="parla('Non la conosco, vada via, non apro!')">🟡 VADA VIA</button>
-<button class="verde" onclick="parla('Sì, può salire, apro')">🟢 PUÒ SALIRE</button>
-</div>
-</div>
-
+<h1>🛡️ CITOFONO SICURO<br>di Tiziana e Giuseppe</h1>
+<div id="setup" class="card"><h2>📱 Configura</h2>Numero famiglia:<br><input type="tel" id="numFam" placeholder="3331234567"><br>Indirizzo:<br><textarea id="indirizzo" rows="2" placeholder="Villanova Mondovi, Via..."></textarea><br><button class="salva" onclick="salva()">✅ SALVA</button></div>
+<div id="main" style="display:none"><div class="card"><p>Famiglia: <b id="showNum"></b> - <a href="#" onclick="resetta()">cambia</a><br><span id="showInd"></span></p><button class="sos" onclick="emergenza('famiglia')">🆘 AIUTO<br>CHIAMA FAMIGLIA</button><button class="male" onclick="emergenza('118')">🚑 STO MALE<br>CHIAMA 118</button></div><div class="card"><h3>🚪 Citofono</h3><button class="blu" onclick="parla('Chi e? Dica chi e!')">🔵 CHI E?</button><button class="giallo" onclick="parla('Non la conosco, vada via, non apro!')">🟡 VADA VIA</button><button class="verde" onclick="parla('Si, puo salire, apro')">🟢 PUO SALIRE</button></div></div>
 <script>
-function salva(){
-let n=document.getElementById('numFam').value.replace(/[^0-9+]/g,'');
-let ind=document.getElementById('indirizzo').value.trim();
-if(n.length<8){alert('Metti numero valido');return;}
-if(ind.length<5){alert('Metti indirizzo');return;}
-localStorage.setItem('sv_num',n);localStorage.setItem('sv_ind',ind);avvia();
-}
-function avvia(){
-let n=localStorage.getItem('sv_num');let ind=localStorage.getItem('sv_ind');
-if(!n||!ind){document.getElementById('setup').style.display='block';document.getElementById('main').style.display='none';return;}
-document.getElementById('setup').style.display='none';document.getElementById('main').style.display='block';
-document.getElementById('showNum').innerText=n;document.getElementById('showInd').innerText=ind;
-}
+function salva(){let n=document.getElementById('numFam').value.replace(/[^0-9+]/g,'');let ind=document.getElementById('indirizzo').value.trim();if(n.length<8){alert('Metti numero valido');return;}if(ind.length<5){alert('Metti indirizzo');return;}localStorage.setItem('sv_num',n);localStorage.setItem('sv_ind',ind);avvia();}
+function avvia(){let n=localStorage.getItem('sv_num');let ind=localStorage.getItem('sv_ind');if(!n||!ind){document.getElementById('setup').style.display='block';document.getElementById('main').style.display='none';return;}document.getElementById('setup').style.display='none';document.getElementById('main').style.display='block';document.getElementById('showNum').innerText=n;document.getElementById('showInd').innerText=ind;}
 function resetta(){if(confirm('Cambiare numero?')){localStorage.clear();avvia();}}
 function parla(t){try{speechSynthesis.cancel();}catch(e){}let u=new SpeechSynthesisUtterance(t);u.lang='it-IT';u.rate=0.85;u.volume=1;speechSynthesis.speak(u);}
-function emergenza(tipo){
-let ind=localStorage.getItem('sv_ind')||'casa mia';let n=localStorage.getItem('sv_num');
-if(tipo==='famiglia'){parla('Aiuto! Aiuto! Sono a '+ind+'! Ho bisogno di aiuto! Venite subito!');setTimeout(()=>{if(confirm('CHIAMO FAMIGLIA: '+n+' ?')){window.location.href='tel:'+n;}},2500);}
-else{parla('Aiuto! Sto male! Chiamate ambulanza! Sono a '+ind+'! Chiamate il centodiciotto! Aiuto!');document.body.style.background='#ff0000';setTimeout(()=>{document.body.style.background='#fff5f5';if(confirm('CHIAMO DAVVERO IL 118?')){window.location.href='tel:118';}},4000);}
-}
+function emergenza(tipo){let ind=localStorage.getItem('sv_ind')||'casa mia';let n=localStorage.getItem('sv_num');if(tipo==='famiglia'){parla('Aiuto! Aiuto! Sono a '+ind+'! Ho bisogno di aiuto! Venite subito!');setTimeout(()=>{if(confirm('CHIAMO FAMIGLIA: '+n+' ?')){window.location.href='tel:'+n;}},2500);}else{parla('Aiuto! Sto male! Chiamate ambulanza! Sono a '+ind+'! Aiuto!');document.body.style.background='#ff0000';setTimeout(()=>{document.body.style.background='#fff5f5';if(confirm('CHIAMO DAVVERO IL 118?')){window.location.href='tel:118';}},4000);}}
 avvia();
 </script>
 </body>
